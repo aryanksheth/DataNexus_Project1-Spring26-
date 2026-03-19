@@ -21,8 +21,8 @@ def clean_job_dataset(filename, columns_to_keep, output_file):
         selected_headers.append(headers[i])
 
     cleaned_rows = []
+
     # 4) PROCESSING THE ROWS
-    
     for line in lines[1:]:
         row = line.strip().split(",")
 
@@ -36,3 +36,15 @@ def clean_job_dataset(filename, columns_to_keep, output_file):
         cleaned_rows.append(filtered_row)
 
     # 5) CREATING OUTPUT FILE BASED ON TIME/DATE:
+    timestamp = str(int(time.time()))
+    output_name = output_file + "_" + timestamp + ".csv"
+
+    out = open(output_name, "w", encoding="utf-8")
+    out.write(",".join(selected_headers) + "\n")
+
+    for row in cleaned_rows:
+        out.write(",".join(row) + "\n")
+
+    out.close()
+
+    print("Saved file:", output_file)
