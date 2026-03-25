@@ -18,7 +18,7 @@ def clean_job_dataset(filename, columns_to_keep, output_file):
 
     selected_headers = []
     for i in indexes:
-        selected_headers.append(headers[i])
+        selected_headers.append(header[i])
 
     cleaned_rows = []
 
@@ -47,6 +47,6 @@ def clean_job_dataset(filename, columns_to_keep, output_file):
 
     out.close()
 
-    print("Saved file:", output_file)
+    print("Saved file:", output_name)
 
 
