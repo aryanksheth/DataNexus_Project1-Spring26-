@@ -1,16 +1,17 @@
-import time 
+import time
+import csv
 
 def clean_job_dataset(filename, columns_to_keep, output_file):
-    
-    # 1) READING THE FILE:
-    file = open(filename,"r",encoding="utf-8")
-    lines = file.readlines()
-    file.close()
 
-    # 2) SPLITTING THE HEADER:
-    header = lines[0].strip().split(",")
+    # 1) READ FILE
+    with open(filename, newline='', encoding="utf-8") as file:
+        reader = csv.reader(file)
+        lines = list(reader)
 
-    # 3) FIND INDEXES OF COLUMNS TO KEEP
+    # 2) HEADER
+    header = lines[0]
+
+    # 3) FIND INDEXES
     indexes = []
     for i in range(len(header)):
         if header[i] in columns_to_keep:
@@ -22,31 +23,23 @@ def clean_job_dataset(filename, columns_to_keep, output_file):
 
     cleaned_rows = []
 
-    # 4) PROCESSING THE ROWS
-    for line in lines[1:]:
-        row = line.strip().split(",")
-
+    # 4) PROCESS ROWS
+    for row in lines[1:]:
         filtered_row = []
         for i in indexes:
             if i < len(row):
                 filtered_row.append(row[i])
             else:
                 filtered_row.append("")
-
         cleaned_rows.append(filtered_row)
 
-    # 5) CREATING OUTPUT FILE BASED ON TIME/DATE:
+    # 5) OUTPUT FILE
     timestamp = str(int(time.time()))
     output_name = output_file + "_" + timestamp + ".csv"
 
-    out = open(output_name, "w", encoding="utf-8")
-    out.write(",".join(selected_headers) + "\n")
-
-    for row in cleaned_rows:
-        out.write(",".join(row) + "\n")
-
-    out.close()
+    with open(output_name, "w", newline='', encoding="utf-8") as out:
+        writer = csv.writer(out)
+        writer.writerow(selected_headers)
+        writer.writerows(cleaned_rows)
 
     print("Saved file:", output_name)
-
-
